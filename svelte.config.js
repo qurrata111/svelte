@@ -18,8 +18,8 @@ const config = {
 			crawl: true,
 			entries: [
 				'*',
-				'test/*',
-				'test/*/details',
+				'/test/*',
+				'/test/*/details',
 			],
 		},
 	},
