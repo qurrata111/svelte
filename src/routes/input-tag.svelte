@@ -85,10 +85,3 @@ import { init } from 'svelte/internal';
         { JSON.stringify(selectionWork) }
     </pre>
 </div>
-  
-<style>
-    .small-input {
-        width: 50px;
-        height: 20px;
-    }
-</style>

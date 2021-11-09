@@ -9,5 +9,8 @@
         <div class="flex justify-center">
             <a href="/input-tag" class="text-lg p-2 text-white">Input Tag</a>
         </div>
+        <div class="flex justify-center">
+            <a href="/test" class="text-lg p-2 text-white">test route</a>
+        </div>
     </div>
 </div>
