@@ -4,10 +4,11 @@
 
 <script>
     import axios from 'axios';
+    import variables from '$lib/variables';
 
-    const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1';
-    const CLOUDINARY_CLOUD_NAME = 'qurrata111';
-    const CLOUDINARY_UPLOAD_PRESET = 'ee6owq6a';
+    const CLOUDINARY_URL = variables.VITE_CLOUDINARY_URL;
+    const CLOUDINARY_CLOUD_NAME = variables.VITE_CLOUDINARY_CLOUD_NAME;
+    const CLOUDINARY_UPLOAD_PRESET = variables.VITE_CLOUDINARY_UPLOAD_PRESET;
 
     let src = '';
     let src_q_best = '';
