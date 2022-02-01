@@ -6,60 +6,39 @@
 	import variables from '$lib/variables';
 	import { format } from 'date-fns';
 
-	let explanation,
-		hdurl,
-		title,
-		url = '';
+	let loading = false;
 
 	// default date
 	let today = new Date();
 	today.setDate(today.getDate() - 1);
 	let date = format(today, 'yyyy-MM-dd');
 
-	// request
-	$: axios
-		.get(`${variables.VITE_APOD_API}`, {
-			params: {
-				api_key: variables.VITE_APOD_API_KEY,
-				date: date
-			}
-		})
-		.then((response) => {
-			if (response.status == '200') {
-				date = new Date(response.data.date);
-				explanation = response.data.explanation;
-				hdurl = response.data.hdurl;
-				url = response.data.url;
-				title = response.data.title;
-			}
-			return '';
-		})
-		.then((error) => {
-			console.log(error);
-		});
+	let result;
 
-	const handleRequest = () => {
-		axios
-			.get(`${variables.VITE_APOD_API}`, {
-				params: {
-					api_key: variables.VITE_APOD_API_KEY,
-					date: date
-				}
-			})
-			.then((response) => {
-				if (response.status == '200') {
-					date = new Date(response.data.date);
-					explanation = response.data.explanation;
-					hdurl = response.data.hdurl;
-					url = response.data.url;
-					title = response.data.title;
-				}
-				return '';
-			})
-			.then((error) => {
-				console.log(error);
-			});
+	// request
+	const handleRequest = async () => {
+		loading = true;
+		try {
+			const resp = await axios
+				.get(`${variables.VITE_APOD_API}`, {
+					params: {
+						api_key: variables.VITE_APOD_API_KEY,
+						date: date
+					}
+				})
+				.then((response) => {
+					if (response.status == '200') {
+						result = response.data;
+					}
+				})
+				.then((error) => {
+					console.log(error);
+				});
+		} catch (error) {}
+		loading = false;
 	};
+
+	handleRequest();
 </script>
 
 <svelte:head>
@@ -102,15 +81,31 @@
 		</div>
 	</div>
 	<div class="grid grid-cols-1 sm:grid-cols-2 pb-4 flex justify-center">
-		<div class="p-2 flex justify-center">
-			<img class="border rounded shadow te" src={hdurl} alt={title} />
+		<div class="p-2 flex justify-center text-center">
+			{#if loading}
+				<div>...</div>
+			{:else if result.media_type === 'image'}
+				<img
+					class="border rounded shadow"
+					src={result.hdurl ? result.hdurl : result.url}
+					alt={result.title}
+				/>
+			{:else if result.media_type === 'video'}
+        <a class="underline" href={result.url } target="blank">{result.url}</a>
+			{/if}
 		</div>
-		<div class="p-2">
-			<div class="py-1 pb-2">
-				<div class="text-center text-xl font-bold">{title ? title : ""}</div>
-				<div class="text-center text-sm">{date ? format(new Date(date), 'dd MMMM yyyy') : ""}</div>
+		{#if loading}
+			<div>...</div>
+		{:else}
+			<div class="p-2">
+				<div class="py-1 pb-2">
+					<div class="text-center text-xl font-bold">{result.title ? result.title : ''}</div>
+					<div class="text-center text-sm">
+						{result.date ? format(new Date(result.date), 'dd MMMM yyyy') : ''}
+					</div>
+				</div>
+				<div class="text-justify">{result.explanation ? result.explanation : ''}</div>
 			</div>
-			<div class="text-justify">{explanation ? explanation : ""}</div>
-		</div>
+		{/if}
 	</div>
 </div>
