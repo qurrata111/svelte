@@ -58,9 +58,9 @@
 				</div>
 				<div class="p-2">
 					<div class="p-1">Masukkan tanggal</div>
-					<input class="border rounded py-1 px-2 shadow-sm" type="date" bind:value={date} />
-					<span class="p-2 items-center bg-gray-100 rounded shadow-sm hover:bg-gray-200">
-						<button on:click={handleRequest}>
+					<input class="border rounded py-1 px-2 shadow-sm" type="date" bind:value={date} max={format(new Date(), "yyyy-MM-dd")} />
+					<span class="items-center" >
+						<button on:click={handleRequest} class="p-2 items-center bg-gray-100 rounded shadow-sm hover:bg-gray-200">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="16"
@@ -83,7 +83,10 @@
 	<div class="grid grid-cols-1 sm:grid-cols-2 pb-4 flex justify-center">
 		<div class="p-2 flex justify-center text-center">
 			{#if loading}
-				<div>...</div>
+				<button class="flex justify-center text-center p-2" type="button" disabled>
+					<svg class="animate-spin bg-gray-500 h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
+					</svg>
+				</button>
 			{:else if result.media_type === 'image'}
 				<img
 					class="border rounded shadow"
@@ -91,11 +94,14 @@
 					alt={result.title}
 				/>
 			{:else if result.media_type === 'video'}
-        <a class="underline" href={result.url } target="blank">{result.url}</a>
+				<a class="underline" href={result.url} target="blank">{result.url}</a>
 			{/if}
 		</div>
 		{#if loading}
-			<div>...</div>
+			<button class="flex justify-center text-center p-2" type="button" disabled>
+				<svg class="animate-spin bg-gray-500 h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
+				</svg>
+			</button>
 		{:else}
 			<div class="p-2">
 				<div class="py-1 pb-2">
