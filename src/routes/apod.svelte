@@ -28,13 +28,18 @@
 				})
 				.then((response) => {
 					if (response.status == '200') {
-						result = response.data;
+						result = response;
 					}
 				})
 				.then((error) => {
-					console.log(error);
+					// TO DO
+					// error handling
 				});
-		} catch (error) {}
+		} catch (error) {
+			if (error.response) {
+				result = error.response;
+			}
+		}
 		loading = false;
 	};
 
@@ -80,38 +85,37 @@
 			</div>
 		</div>
 	</div>
-	<div class="grid grid-cols-1 sm:grid-cols-2 pb-4 flex justify-center">
-		<div class="p-2 flex justify-center text-center">
-			{#if loading}
-				<button class="flex justify-center text-center p-2" type="button" disabled>
-					<svg class="animate-spin bg-gray-500 h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
-					</svg>
-				</button>
-			{:else if result.media_type === 'image'}
-				<img
-					class="border rounded shadow"
-					src={result.hdurl ? result.hdurl : result.url}
-					alt={result.title}
-				/>
-			{:else if result.media_type === 'video'}
-				<a class="underline" href={result.url} target="blank">{result.url}</a>
-			{/if}
-		</div>
-		{#if loading}
-			<button class="flex justify-center text-center p-2" type="button" disabled>
-				<svg class="animate-spin bg-gray-500 h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
-				</svg>
-			</button>
-		{:else}
-			<div class="p-2">
-				<div class="py-1 pb-2">
-					<div class="text-center text-xl font-bold">{result.title ? result.title : ''}</div>
-					<div class="text-center text-sm">
-						{result.date ? format(new Date(result.date), 'dd MMMM yyyy') : ''}
-					</div>
+	{#if loading}
+		<button class="flex justify-center text-center p-2" type="button" disabled>
+			<svg class="animate-spin bg-gray-500 h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
+			</svg>
+		</button>
+	{:else}
+		{#if result && result.status == '200'}
+			<div class="grid grid-cols-1 sm:grid-cols-2 pb-4 flex justify-center">
+				<div class="p-2 flex justify-center text-center">
+					{#if result.data.media_type === 'image'}
+						<img
+							class="border rounded shadow"
+							src={result.data.hdurl ? result.data.hdurl : result.data.url}
+							alt={result.data.title}
+						/>
+					{:else if result.data.media_type === 'video'}
+						<a class="underline" href={result.data.url} target="blank">{result.data.url}</a>
+					{/if}
 				</div>
-				<div class="text-justify">{result.explanation ? result.explanation : ''}</div>
+				<div class="p-2">
+					<div class="py-1 pb-2">
+						<div class="text-center text-xl font-bold">{result.data.title ? result.data.title : ''}</div>
+						<div class="text-center text-sm">
+							{result.data.date ? format(new Date(result.data.date), 'dd MMMM yyyy') : ''}
+						</div>
+					</div>
+					<div class="text-justify">{result.data.explanation ? result.data.explanation : ''}</div>
+				</div>
 			</div>
+		{:else if result && result.status == '400'}
+			<div class="font-bold text-center">{result.data.msg}</div>
 		{/if}
-	</div>
+	{/if}
 </div>
