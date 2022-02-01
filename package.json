@@ -27,6 +27,7 @@
 	"type": "module",
 	"dependencies": {
 		"axios": "^0.23.0",
+		"date-fns": "^2.28.0",
 		"svelecte": "^3.0.2",
 		"svelte-tags-input": "^2.8.1"
 	}
